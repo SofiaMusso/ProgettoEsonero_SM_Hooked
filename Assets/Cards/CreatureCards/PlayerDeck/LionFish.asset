@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a446a6d129b6aa947b5196602c3b398e, type: 3}
+  m_Name: LionFish
+  m_EditorClassIdentifier: 
+  cardName: Lion fish
+  cardType: 02000000
+  cost: 5
+  damage: 6
+  health: 3
+  abilityType: 05000000
