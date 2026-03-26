@@ -433,8 +433,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectScale: 1.1
-  cardPlay: {x: 0, y: 700}
-  playPosition: {x: -500, y: 400, z: 0}
+  cardPlay: {x: 0, y: 500}
+  playPosition: {x: -600, y: 500, z: 0}
   glowEffect: {fileID: 4807115315944138373}
   playArrow: {fileID: 3753699626880972120}
 --- !u!1 &1218359552635084740

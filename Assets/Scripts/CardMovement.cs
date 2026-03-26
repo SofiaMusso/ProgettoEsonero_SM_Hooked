@@ -57,7 +57,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
             case 3:
                 HandlePlayState();
 
-                if (Mouse.current.leftButton.isPressed) // Check if mouse button is released
+                if (!Mouse.current.leftButton.isPressed) // Check if mouse button is released
                 {
                     TransitionToStateZero();
                 }
@@ -81,9 +81,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-
-        Debug.Log("PointerEnter"); 
-
         if (currentState == 0)
         {
             originalPosition = rectTransform.localPosition;
@@ -96,8 +93,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("PointerExit");
-
         if (currentState == 1)
         {
             TransitionToStateZero();
@@ -106,8 +101,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("PointerDown");
-
         if (currentState == 1)
         {
             currentState = 2;
@@ -119,8 +112,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("Drag");
-
         if (currentState == 2)
         {
             Vector2 localPointerPosition;
@@ -129,16 +120,16 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
             {
                 rectTransform.position = Input.mousePosition;
 
-                //localPointerPosition /= canvas.scaleFactor;
+                /*localPointerPosition /= canvas.scaleFactor;
 
                 //Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
-                //rectTransform.localPosition = originalPanelLocalPosition + offsetToOriginal;
+                rectTransform.localPosition = originalPanelLocalPosition + offsetToOriginal;*/
 
                 if (rectTransform.localPosition.y > cardPlay.y)
                 {
                     currentState = 3;
                     playArrow.SetActive(true);
-                    rectTransform.localPosition = playPosition;
+                   // rectTransform.localPosition = playPosition;
                 }
             }
         }
@@ -164,7 +155,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         //Set the card's rotation to zero
         rectTransform.localRotation = Quaternion.identity;
 
-        if (Mouse.current.leftButton.ReadValue() > cardPlay.y)
+        if (Mouse.current.leftButton.ReadValue() < cardPlay.y)
         {
             currentState = 2;
             playArrow.SetActive(false);
