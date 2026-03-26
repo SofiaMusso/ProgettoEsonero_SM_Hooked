@@ -1,5 +1,5 @@
 using UnityEngine;
-using CardManeger;
+using CardManager;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -15,11 +15,6 @@ public class HandManager : MonoBehaviour
     public float verticalSpacing;
 
     public List<GameObject> cardsInHand = new List<GameObject>();
-  
-    void Start()
-    {
-
-    }
 
     private void FixedUpdate()
     {

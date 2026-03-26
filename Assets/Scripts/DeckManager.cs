@@ -1,4 +1,4 @@
-using CardManeger;
+using CardManager;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 public class DeckManager : MonoBehaviour
 {
-
     public List<CreatureCard> allCards = new List<CreatureCard>();
 
     private int currentIndex = 0;

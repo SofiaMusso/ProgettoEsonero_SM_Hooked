@@ -1,13 +1,13 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using CardManeger;
+using CardManager;
 
 public class CardDisplay : MonoBehaviour
 {
     public CreatureCard cardData;
 
-    [Header ("Card Data")]
+    [Header ("Creature Card Data")]
     public Image cardImage;
     public Image[] landTypeImages;
     public Image[] abilty;
@@ -19,10 +19,10 @@ public class CardDisplay : MonoBehaviour
 
     void Start()
     {
-        UpdateCardDisplay();
+        UpdateCreatureCardDisplay();
     }
 
-    public void UpdateCardDisplay()
+    public void UpdateCreatureCardDisplay()
     {
         //Updates string data
         nameText.text = cardData.cardName;

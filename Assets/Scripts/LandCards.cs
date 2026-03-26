@@ -1,7 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Land Card", menuName = "Land Card")]
-public class LandCard : ScriptableObject
+namespace CardManager
 {
-    public string cardName;
+
+    [CreateAssetMenu(fileName = "New Land Card", menuName = "Land Card")]
+    public class LandCard : ScriptableObject
+    {
+        public string cardName;
+
+        public int cost;
+        public int damage;
+        public int health;
+
+        public List<LandCardAbility> lCardAbility;
+        public enum LandCardAbility
+        {
+            miao,
+        }
+    }
 }

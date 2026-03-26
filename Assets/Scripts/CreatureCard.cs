@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CardManeger
+namespace CardManager
 {
     [CreateAssetMenu(fileName = "New Creature Card", menuName = "Creature Card")]
 
