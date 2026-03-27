@@ -1,3 +1,4 @@
+using CardManager;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     private Vector2 originalLocalPointerPosition;
     private Vector3 originalPanelLocalPosition;
-    private Vector3 originaleScale;
+    private Vector3 originalScale;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
@@ -24,7 +25,9 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     [SerializeField] private Vector3 playPosition;
     [SerializeField] private GameObject glowEffect;
 
-    private static List<CardMovement> allCards = new List<CardMovement>();
+    public static CardMovement currentCardInPlay;
+
+    /*private static List<CardMovement> allCards = new List<CardMovement>();
 
     private void OnEnable()
     {
@@ -34,14 +37,15 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private void OnDisable()
     {
         allCards.Remove(this);
-    }
+    }*/
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
 
         //Get original data
-        originaleScale = rectTransform.localScale;
+        originalScale = rectTransform.localScale;
         originalPosition = rectTransform.localPosition; 
         originalRotation = rectTransform.localRotation;
 
@@ -81,10 +85,11 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private void TransitionToStateZero() // Sets everything back to it's original state
     {
         currentState = 0;
+        currentCardInPlay = null;
 
         rectTransform.localPosition = originalPosition;  //Reset position
         rectTransform.localRotation = originalRotation; //Reset rotation
-        rectTransform.localScale = originaleScale; //Reset scale
+        rectTransform.localScale = originalScale; //Reset scale
 
         glowEffect.SetActive(false);
     }
@@ -95,7 +100,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         {
             originalPosition = rectTransform.localPosition;
             originalRotation = rectTransform.localRotation;
-            originaleScale = rectTransform.localScale; 
+            originalScale = rectTransform.localScale; 
 
             currentState = 1;
         }
@@ -143,7 +148,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private void HandleHoverState()
     {
         glowEffect.SetActive(true);
-        rectTransform.localScale = originaleScale * selectScale;
+        rectTransform.localScale = originalScale * selectScale;
     }
 
     private void HandleDragState()
@@ -154,6 +159,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     private void HandlePlayState()
     {
+        currentCardInPlay = this;
         rectTransform.localPosition = playPosition;
 
         //Set the card's rotation to zero
@@ -166,35 +172,51 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         }
     }
 
-   /*private void NotifyOtherCards()
+    private void PlayStateOne()
     {
-        int i = 0;
-        foreach (var card in allCards)
-        {
-            if (card != this)
-            {
-                card.MoveToBottom(i);
-                i++;
-            }
-        }
-    }
-    public void MoveToBottom(int i)
-    {
-        rectTransform.localPosition = new Vector3(originalPosition.x + i * 30f, moveHandDown, originalPosition.z);
-        rectTransform.localScale = originaleScale * 0.8f;
-    }
 
-    private void ResetOtherCards()
+    }
+    private void PlayStateTwo()
     {
-        foreach (var card in allCards)
-        {
-            if (card != this)
-            {
-                rectTransform.localPosition = originalPosition;
-                rectTransform.localScale = originaleScale;
-                rectTransform.localRotation = originalRotation;
-            }
-        }
-    }*/
+
+    }
+    private void PlayStateThree()
+    {
+
+    }
+    private void PlayStateFour()
+    {
+
+    }
+    /*private void NotifyOtherCards()
+     {
+         int i = 0;
+         foreach (var card in allCards)
+         {
+             if (card != this)
+             {
+                 card.MoveToBottom(i);
+                 i++;
+             }
+         }
+     }
+     public void MoveToBottom(int i)
+     {
+         rectTransform.localPosition = new Vector3(originalPosition.x + i * 30f, moveHandDown, originalPosition.z);
+         rectTransform.localScale = originaleScale * 0.8f;
+     }
+
+     private void ResetOtherCards()
+     {
+         foreach (var card in allCards)
+         {
+             if (card != this)
+             {
+                 rectTransform.localPosition = originalPosition;
+                 rectTransform.localScale = originaleScale;
+                 rectTransform.localRotation = originalRotation;
+             }
+         }
+     }*/
 
 }

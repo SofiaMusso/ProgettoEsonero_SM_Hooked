@@ -9,21 +9,20 @@ public class DeckManager : MonoBehaviour
     public List<CardData> allCards = new List<CardData>();
 
     private int currentIndex = 0;
+
     public int maxHandSize;
     public int currentHandSize;
 
     private HandManager handManager;
+    public CardDatabase database;
 
     private void Start()
     {
-        CardData[] cards = Resources.LoadAll<CardData>("Cards");
-
-        allCards.AddRange(cards);
+        allCards = new List<CardData>(database.allCards);
 
         handManager = FindAnyObjectByType<HandManager>();
-        maxHandSize = handManager.maxHandSize;
 
-        for (int i = 0; i < 6; i++)
+        for(int i = 0; i < 6; i++)
         {
             DrawCard(handManager);
         }
@@ -49,4 +48,5 @@ public class DeckManager : MonoBehaviour
             currentIndex = (currentIndex + 1) % allCards.Count;
         }
     }
+
 }

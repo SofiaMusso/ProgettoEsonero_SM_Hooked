@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6ff809e1c73301499d21dea4677e7d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData: {fileID: 11400000, guid: a5e5109fa065e93499958c4e3a13a5f2, type: 2}
+  cardData: {fileID: 0}
   cardImage: {fileID: 121948626779341900}
   landTypeImages:
   - {fileID: 3346939691939478605}

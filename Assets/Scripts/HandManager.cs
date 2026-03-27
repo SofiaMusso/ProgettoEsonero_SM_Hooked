@@ -15,12 +15,22 @@ public class HandManager : MonoBehaviour
     public float verticalSpacing;
 
     public int maxHandSize = 20;
+    public int moveCardDown = -300;
+
+    private bool MovedHand = false;
 
     public List<GameObject> cardsInHand = new List<GameObject>();
 
-    private void FixedUpdate()
+    private void Update()
     {
-        //UpdateHandVisuals();
+        if (CardMovement.currentCardInPlay != null)
+        {
+            MoveHandDown();
+        }
+        else if (CardMovement.currentCardInPlay == null && MovedHand)
+        {
+            MoveHandUp();
+        }
     }
 
     public void AddCardToHand(CardData cardData)
@@ -62,5 +72,26 @@ public class HandManager : MonoBehaviour
             //set card position
             cardsInHand[i].transform.localPosition = new Vector3(hOffset, vOffset, 0f);
         }
+    }
+
+    public void MoveHandDown()
+    {
+        foreach (var card in cardsInHand)
+        {
+            if (card == CardMovement.currentCardInPlay.gameObject)
+            {
+                continue;
+            }
+            card.transform.position = new Vector3(card.transform.position.x, moveCardDown, card.transform.position.z);
+            card.transform.rotation = Quaternion.identity;
+        }
+
+        MovedHand = true;
+    }
+
+    public void MoveHandUp()
+    {
+        UpdateHandVisuals();
+        MovedHand = false;
     }
 }
