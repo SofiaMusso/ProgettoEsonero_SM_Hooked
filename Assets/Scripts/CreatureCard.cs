@@ -6,17 +6,14 @@ namespace CardManager
 {
     [CreateAssetMenu(fileName = "New Creature Card", menuName = "Creature Card")]
 
-    public class CreatureCard : ScriptableObject
+    public class CreatureCard : CardData
     {
-        public string cardName;
         public List<CardType> cardType;
 
-        public int cost;
         public int damage;
         public int health;
 
         public List<AbilityType> abilityType;
-
         public enum CardType
         {
             Ocean,

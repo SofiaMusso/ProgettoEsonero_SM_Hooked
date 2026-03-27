@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,14 +17,24 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private Quaternion originalRotation;
 
     private int currentState = 0;
+    //public float moveHandDown;
 
     [SerializeField] private float selectScale = 1.1f;
     [SerializeField] private Vector2 cardPlay;
     [SerializeField] private Vector3 playPosition;
     [SerializeField] private GameObject glowEffect;
-    [SerializeField] private GameObject playArrow;
 
+    private static List<CardMovement> allCards = new List<CardMovement>();
 
+    private void OnEnable()
+    {
+        allCards.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        allCards.Remove(this);
+    }
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -35,7 +46,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         originalRotation = rectTransform.localRotation;
 
     }
-
     void Update()
     {
         switch (currentState)
@@ -60,6 +70,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
                 if (!Mouse.current.leftButton.isPressed) // Check if mouse button is released
                 {
                     TransitionToStateZero();
+
                 }
 
                 break;
@@ -76,7 +87,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         rectTransform.localScale = originaleScale; //Reset scale
 
         glowEffect.SetActive(false);
-        playArrow.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -120,15 +130,10 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
             {
                 rectTransform.position = Input.mousePosition;
 
-                /*localPointerPosition /= canvas.scaleFactor;
-
-                //Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
-                rectTransform.localPosition = originalPanelLocalPosition + offsetToOriginal;*/
-
                 if (rectTransform.localPosition.y > cardPlay.y)
                 {
+                    //NotifyOtherCards();
                     currentState = 3;
-                    playArrow.SetActive(true);
                    // rectTransform.localPosition = playPosition;
                 }
             }
@@ -144,7 +149,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private void HandleDragState()
     {
         //Set the card's rotation to zero
-
         rectTransform.localRotation = Quaternion.identity;
     }
 
@@ -157,9 +161,40 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
         if (Mouse.current.leftButton.ReadValue() < cardPlay.y)
         {
+            //ResetOtherCards(); 
             currentState = 2;
-            playArrow.SetActive(false);
         }
     }
+
+   /*private void NotifyOtherCards()
+    {
+        int i = 0;
+        foreach (var card in allCards)
+        {
+            if (card != this)
+            {
+                card.MoveToBottom(i);
+                i++;
+            }
+        }
+    }
+    public void MoveToBottom(int i)
+    {
+        rectTransform.localPosition = new Vector3(originalPosition.x + i * 30f, moveHandDown, originalPosition.z);
+        rectTransform.localScale = originaleScale * 0.8f;
+    }
+
+    private void ResetOtherCards()
+    {
+        foreach (var card in allCards)
+        {
+            if (card != this)
+            {
+                rectTransform.localPosition = originalPosition;
+                rectTransform.localScale = originaleScale;
+                rectTransform.localRotation = originalRotation;
+            }
+        }
+    }*/
 
 }

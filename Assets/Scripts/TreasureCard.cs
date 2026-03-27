@@ -4,9 +4,8 @@ using UnityEngine;
 namespace CardManager
 {
     [CreateAssetMenu(fileName = "New Treasure Card", menuName = "Treasure Card")]
-    public class TreasureCard : ScriptableObject
+    public class TreasureCard : CardData
     {
-        public string cardName;
 
         public List<TreasureCardAbility> tCardAbility;
 

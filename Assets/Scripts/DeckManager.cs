@@ -6,16 +6,34 @@ using System.Collections.Generic;
 
 public class DeckManager : MonoBehaviour
 {
-    public List<CreatureCard> allCards = new List<CreatureCard>();
+    public List<CardData> allCards = new List<CardData>();
 
     private int currentIndex = 0;
+    public int maxHandSize;
+    public int currentHandSize;
+
+    private HandManager handManager;
 
     private void Start()
     {
-        HandManager hand = FindAnyObjectByType<HandManager>();
+        CardData[] cards = Resources.LoadAll<CardData>("Cards");
+
+        allCards.AddRange(cards);
+
+        handManager = FindAnyObjectByType<HandManager>();
+        maxHandSize = handManager.maxHandSize;
+
         for (int i = 0; i < 6; i++)
         {
-            DrawCard(hand);
+            DrawCard(handManager);
+        }
+    }
+
+    private void Update()
+    {
+        if (handManager != null)
+        {
+            currentHandSize = handManager.cardsInHand.Count;
         }
     }
     public void DrawCard(HandManager handManager)
@@ -24,9 +42,11 @@ public class DeckManager : MonoBehaviour
         {
             return;
         }
-
-        CreatureCard nextCard = allCards[currentIndex];
-        handManager.AddCardToHand (nextCard);
-        currentIndex = (currentIndex + 1) % allCards.Count;
+        if (currentHandSize < maxHandSize)
+        {
+            CardData nextCard = allCards[currentIndex];
+            handManager.AddCardToHand(nextCard);
+            currentIndex = (currentIndex + 1) % allCards.Count;
+        }
     }
 }

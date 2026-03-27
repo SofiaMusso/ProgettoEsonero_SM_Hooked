@@ -14,6 +14,8 @@ public class HandManager : MonoBehaviour
     public float cardSpacing;
     public float verticalSpacing;
 
+    public int maxHandSize = 20;
+
     public List<GameObject> cardsInHand = new List<GameObject>();
 
     private void FixedUpdate()
@@ -21,14 +23,17 @@ public class HandManager : MonoBehaviour
         //UpdateHandVisuals();
     }
 
-    public void AddCardToHand(CreatureCard cardData)
+    public void AddCardToHand(CardData cardData)
     {
-        //Instantiate the cards and adds it in the list
-        GameObject newCard = Instantiate(cardPrefab, handTransform.position, Quaternion.identity, handTransform);
-        cardsInHand.Add(newCard);
+        if (cardsInHand.Count < maxHandSize)
+        {
+            //Instantiate the cards and adds it in the list
+            GameObject newCard = Instantiate(cardPrefab, handTransform.position, Quaternion.identity, handTransform);
+            cardsInHand.Add(newCard);
 
-        //set card data
-        newCard.GetComponent<CardDisplay>().cardData = cardData;
+            //set card data
+            newCard.GetComponent<CardDisplay>().cardData = cardData;
+        }
 
         UpdateHandVisuals();
     }
@@ -57,9 +62,5 @@ public class HandManager : MonoBehaviour
             //set card position
             cardsInHand[i].transform.localPosition = new Vector3(hOffset, vOffset, 0f);
         }
-    }
-    void Update()
-    {
-        
     }
 }

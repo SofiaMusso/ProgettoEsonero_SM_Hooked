@@ -5,10 +5,11 @@ using CardManager;
 
 public class CardDisplay : MonoBehaviour
 {
-    public CreatureCard cardData;
+    public CardData cardData;
 
     [Header ("Creature Card Data")]
     public Image cardImage;
+    //public Image cardSprite;
     public Image[] landTypeImages;
     public Image[] abilty;
 
@@ -22,25 +23,54 @@ public class CardDisplay : MonoBehaviour
         UpdateCreatureCardDisplay();
     }
 
+    void ResetUI()
+    {
+        healthText.gameObject.SetActive(false);
+        damageText.gameObject.SetActive(false);
+
+        foreach (var img in landTypeImages)
+            img.gameObject.SetActive(false);
+
+        foreach (var img in abilty)
+            img.gameObject.SetActive(false);
+    }
+
     public void UpdateCreatureCardDisplay()
     {
-        //Updates string data
+        ResetUI();
+
         nameText.text = cardData.cardName;
         costText.text = cardData.cost.ToString();
-        healthText.text = cardData.health.ToString();
-        damageText.text = cardData.damage.ToString();
+        //cardSprite.sprite = cardData.sprite;
 
-        //Updates Images data
-        for (int i = 0; i < landTypeImages.Length; i++)
+        if (cardData is CreatureCard creature)
         {
-            if (i < cardData.cardType.Count)
+        
+            healthText.text = creature.health.ToString();
+            damageText.text = creature.damage.ToString();
+
+            for (int i = 0; i < landTypeImages.Length; i++)
             {
-                landTypeImages[i].gameObject.SetActive(true);
+                if (i < creature.cardType.Count)
+                {
+                    landTypeImages[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    landTypeImages[i].gameObject.SetActive(false);
+                }
             }
-            else
-            {
-                landTypeImages[i].gameObject.SetActive(false);
-            }
+        }
+
+        if (cardData is LandCard land)
+        {
+            healthText.text = land.health.ToString();
+            damageText.text = land.damage.ToString();
+        }
+
+        if (cardData is TreasureCard treasure)
+        {
+
         }
 
     }

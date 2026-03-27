@@ -5,11 +5,8 @@ namespace CardManager
 {
 
     [CreateAssetMenu(fileName = "New Land Card", menuName = "Land Card")]
-    public class LandCard : ScriptableObject
+    public class LandCard : CardData
     {
-        public string cardName;
-
-        public int cost;
         public int damage;
         public int health;
 
