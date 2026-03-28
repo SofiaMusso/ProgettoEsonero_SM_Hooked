@@ -25,8 +25,8 @@ public class CardDisplay : MonoBehaviour
 
     void ResetUI()
     {
-        healthText.gameObject.SetActive(false);
-        damageText.gameObject.SetActive(false);
+        //healthText.gameObject.SetActive(false);
+        //damageText.gameObject.SetActive(false);
 
         foreach (var img in landTypeImages)
             img.gameObject.SetActive(false);

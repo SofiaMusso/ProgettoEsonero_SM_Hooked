@@ -1,12 +1,15 @@
-using CardManager;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CardManager;
+using Unity.Collections;
+using UnityEngine;
 
 
 public class DeckManager : MonoBehaviour
 {
-    public List<CardData> allCards = new List<CardData>();
+    public List<CardData> playerCards = new List<CardData>();
+    public List<CardData> deckCards = new List<CardData>();
 
     private int currentIndex = 0;
 
@@ -16,13 +19,25 @@ public class DeckManager : MonoBehaviour
     private HandManager handManager;
     public CardDatabase database;
 
+    public int x;
+    public int deckSize;
+
     private void Start()
     {
-        allCards = new List<CardData>(database.allCards);
+        playerCards = new List<CardData>(database.allCards);
 
         handManager = FindAnyObjectByType<HandManager>();
 
-        for(int i = 0; i < 6; i++)
+        // Mescola tutte le carte
+        playerCards = playerCards.OrderBy(card => Random.value).ToList();
+
+        // Prendi le prime deckSize carte
+        for (int i = 0; i < deckSize; i++)
+        {
+            deckCards[i] = playerCards[i];
+        }
+
+        for (int i = 0; i < 6; i++)
         {
             DrawCard(handManager);
         }
@@ -37,15 +52,15 @@ public class DeckManager : MonoBehaviour
     }
     public void DrawCard(HandManager handManager)
     {
-        if (allCards.Count == 0)
+        if (playerCards.Count == 0)
         {
             return;
         }
         if (currentHandSize < maxHandSize)
         {
-            CardData nextCard = allCards[currentIndex];
+            CardData nextCard = playerCards[currentIndex];
             handManager.AddCardToHand(nextCard);
-            currentIndex = (currentIndex + 1) % allCards.Count;
+            currentIndex = (currentIndex + 1) % playerCards.Count;
         }
     }
 

@@ -27,18 +27,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public static CardMovement currentCardInPlay;
 
-    /*private static List<CardMovement> allCards = new List<CardMovement>();
-
-    private void OnEnable()
-    {
-        allCards.Add(this);
-    }
-
-    private void OnDisable()
-    {
-        allCards.Remove(this);
-    }*/
-
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -137,7 +125,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
                 if (rectTransform.localPosition.y > cardPlay.y)
                 {
-                    //NotifyOtherCards();
                     currentState = 3;
                    // rectTransform.localPosition = playPosition;
                 }
@@ -160,7 +147,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private void HandlePlayState()
     {
         currentCardInPlay = this;
-        rectTransform.localPosition = playPosition;
 
         //Set the card's rotation to zero
         rectTransform.localRotation = Quaternion.identity;
@@ -174,49 +160,19 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     private void PlayStateOne()
     {
-
+        rectTransform.localPosition = playPosition;
     }
     private void PlayStateTwo()
     {
-
+        rectTransform.localPosition = playPosition;
     }
     private void PlayStateThree()
     {
-
+        rectTransform.localPosition = playPosition;
     }
     private void PlayStateFour()
     {
-
+        rectTransform.localPosition = playPosition;
     }
-    /*private void NotifyOtherCards()
-     {
-         int i = 0;
-         foreach (var card in allCards)
-         {
-             if (card != this)
-             {
-                 card.MoveToBottom(i);
-                 i++;
-             }
-         }
-     }
-     public void MoveToBottom(int i)
-     {
-         rectTransform.localPosition = new Vector3(originalPosition.x + i * 30f, moveHandDown, originalPosition.z);
-         rectTransform.localScale = originaleScale * 0.8f;
-     }
-
-     private void ResetOtherCards()
-     {
-         foreach (var card in allCards)
-         {
-             if (card != this)
-             {
-                 rectTransform.localPosition = originalPosition;
-                 rectTransform.localScale = originaleScale;
-                 rectTransform.localRotation = originalRotation;
-             }
-         }
-     }*/
 
 }
