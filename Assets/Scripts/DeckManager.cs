@@ -19,7 +19,6 @@ public class DeckManager : MonoBehaviour
     private HandManager handManager;
     public CardDatabase database;
 
-    public int x;
     public int deckSize;
 
     private void Start()
@@ -30,12 +29,6 @@ public class DeckManager : MonoBehaviour
 
         // Mescola tutte le carte
         playerCards = playerCards.OrderBy(card => Random.value).ToList();
-
-        // Prendi le prime deckSize carte
-        for (int i = 0; i < deckSize; i++)
-        {
-            deckCards[i] = playerCards[i];
-        }
 
         for (int i = 0; i < 6; i++)
         {

@@ -23,11 +23,11 @@ public class HandManager : MonoBehaviour
 
     private void Update()
     {
-        if (CardMovement.currentCardInPlay != null)
+        if (CardMovement.currentCardInPlay != null && CardMovement.isDragging)
         {
             MoveHandDown();
         }
-        else if (CardMovement.currentCardInPlay == null && MovedHand)
+        else if (CardMovement.currentCardInPlay == null && !CardMovement.isDragging && MovedHand)
         {
             MoveHandUp();
         }

@@ -29,10 +29,13 @@ public class CardDisplay : MonoBehaviour
         //damageText.gameObject.SetActive(false);
 
         foreach (var img in landTypeImages)
+        {
             img.gameObject.SetActive(false);
-
+        }
         foreach (var img in abilty)
+        {
             img.gameObject.SetActive(false);
+        }
     }
 
     public void UpdateCreatureCardDisplay()

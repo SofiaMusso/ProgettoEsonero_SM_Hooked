@@ -10,6 +10,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
    
     private RectTransform rectTransform;
     private Canvas canvas;
+    private CanvasGroup canvasGroup;
 
     private Vector2 originalLocalPointerPosition;
     private Vector3 originalPanelLocalPosition;
@@ -21,16 +22,26 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     //public float moveHandDown;
 
     [SerializeField] private float selectScale = 1.1f;
-    [SerializeField] private Vector2 cardPlay;
-    [SerializeField] private Vector3 playPosition;
+    [SerializeField] private Vector2 cardPlayY;
+    /*[SerializeField] private Vector2 cardPlay1;
+    [SerializeField] private Vector2 cardPlay2;
+    [SerializeField] private Vector2 cardPlay3;
+    [SerializeField] private Vector2 cardPlay4;
+    [SerializeField] private Vector3 playPosition1;
+    [SerializeField] private Vector3 playPosition2;
+    [SerializeField] private Vector3 playPosition3;
+    [SerializeField] private Vector3 playPosition4;*/
     [SerializeField] private GameObject glowEffect;
 
     public static CardMovement currentCardInPlay;
+    public static bool isInPlay;
+    public static bool isDragging = false;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
+        canvasGroup = GetComponent<CanvasGroup>();
 
         //Get original data
         originalScale = rectTransform.localScale;
@@ -74,6 +85,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     {
         currentState = 0;
         currentCardInPlay = null;
+        canvasGroup.blocksRaycasts = true;
+        isDragging = false;
 
         rectTransform.localPosition = originalPosition;  //Reset position
         rectTransform.localRotation = originalRotation; //Reset rotation
@@ -108,6 +121,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         {
             currentState = 2;
 
+            isDragging = true;
+
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out originalLocalPointerPosition);
             originalPanelLocalPosition = rectTransform.localPosition;
         }
@@ -115,6 +130,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnDrag(PointerEventData eventData)
     {
+        canvasGroup.blocksRaycasts = false;
+
         if (currentState == 2)
         {
             Vector2 localPointerPosition;
@@ -123,7 +140,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
             {
                 rectTransform.position = Input.mousePosition;
 
-                if (rectTransform.localPosition.y > cardPlay.y)
+                if (rectTransform.localPosition.y > cardPlayY.y)
                 {
                     currentState = 3;
                    // rectTransform.localPosition = playPosition;
@@ -151,28 +168,9 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         //Set the card's rotation to zero
         rectTransform.localRotation = Quaternion.identity;
 
-        if (Mouse.current.leftButton.ReadValue() < cardPlay.y)
+        if (Mouse.current.leftButton.ReadValue() < cardPlayY.y)
         {
-            //ResetOtherCards(); 
             currentState = 2;
         }
     }
-
-    private void PlayStateOne()
-    {
-        rectTransform.localPosition = playPosition;
-    }
-    private void PlayStateTwo()
-    {
-        rectTransform.localPosition = playPosition;
-    }
-    private void PlayStateThree()
-    {
-        rectTransform.localPosition = playPosition;
-    }
-    private void PlayStateFour()
-    {
-        rectTransform.localPosition = playPosition;
-    }
-
 }
