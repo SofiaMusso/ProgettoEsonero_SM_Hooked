@@ -3,22 +3,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using CardManager;
 
-public class HabitatSlot : MonoBehaviour, IDropHandler
+public class HabitatSlotManager : MonoBehaviour, IDropHandler
 {
     [Header("Slot Settings")]
     public CreatureCard.CardType slotType;
 
-    private GameObject currentCard;
     private bool cardIsPlaced;
 
     public List<GameObject> cardsOnBoard = new List<GameObject>();
     public HandManager handManager;
+    public DiscardDeckManager discardDeckManager;
 
     void Awake()
     {
         if (handManager == null)
         {
             handManager = FindAnyObjectByType<HandManager>();
+        }
+        if (discardDeckManager == null)
+        {
+            discardDeckManager = FindAnyObjectByType<DiscardDeckManager>();
         }
     }
     public bool CanPlaceOnHabitat(CardDisplay cardDisplay)
@@ -36,6 +40,25 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
             return false;
         }
     }
+
+    public bool CanPayCard(CardDisplay cardDisplay)
+    {
+
+        CardData cardData = cardDisplay.cardData;
+
+        if (!cardIsPlaced && PlayerData.playerDroplets >= cardData.cost)
+        {
+            PlayerData.playerDroplets -= cardData.cost;
+            Debug.Log(PlayerData.playerDroplets);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -64,7 +87,6 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
         {
             cardIsPlaced = true;
 
-            currentCard = card;
             handManager.cardsInHand.Remove(card);
             cardsOnBoard.Add(card);
 
@@ -101,25 +123,27 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
     {
         if (cardIsPlaced)
         {
-            Debug.Log("discard this card?");
+            GameObject card = cardsOnBoard[0];
+            CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
+            CardData cardData = cardDisplay.cardData;
+
+            if (cardData.cost == 0 || cardData.cost == 1)
+            {
+                PlayerData.playerDroplets = PlayerData.playerDroplets + 1;
+                Debug.Log(PlayerData.playerDroplets);
+            }
+            else
+            {
+                PlayerData.playerDroplets = PlayerData.playerDroplets + (cardData.cost) / 2;
+                Debug.Log(PlayerData.playerDroplets);
+            }
+
+            cardsOnBoard.Remove(card);
+
+            discardDeckManager.AddToDiscard(card);
+
+            cardIsPlaced = false;
         }
     }
 
-    public bool CanPayCard(CardDisplay cardDisplay)
-    {
-
-        CardData cardData = cardDisplay.cardData;
-
-        if (!cardIsPlaced && PlayerData.playerDroplets >= cardData.cost)
-        {
-            PlayerData.playerDroplets -= cardData.cost;
-            Debug.Log("I'm rich wohooo");
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 }
