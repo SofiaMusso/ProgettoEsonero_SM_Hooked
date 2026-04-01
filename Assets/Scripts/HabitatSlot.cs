@@ -21,7 +21,7 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
             handManager = FindAnyObjectByType<HandManager>();
         }
     }
-    public bool CanPlace(CardDisplay cardDisplay)
+    public bool CanPlaceOnHabitat(CardDisplay cardDisplay)
     {
         if (cardDisplay.cardData is CreatureCard creatureCard)
         {
@@ -48,7 +48,7 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
 
         if (cardDisplay == null) return;
 
-        if (CanPlace(cardDisplay))
+        if (CanPlaceOnHabitat(cardDisplay) && CanPayCard(cardDisplay))
         {
             PlaceCard(droppedObject, cardMovement);
         }
@@ -89,7 +89,7 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
 
     private void RejectCard(CardMovement movement)
     {
-        Debug.Log("Invalid land type!");
+        Debug.Log("Invalid land type or not enough Droplets");
 
         if (movement != null)
         {
@@ -105,8 +105,21 @@ public class HabitatSlot : MonoBehaviour, IDropHandler
         }
     }
 
-    private void CheckIfCanPayCard()
+    public bool CanPayCard(CardDisplay cardDisplay)
     {
 
+        CardData cardData = cardDisplay.cardData;
+
+        if (!cardIsPlaced && PlayerData.playerDroplets >= cardData.cost)
+        {
+            PlayerData.playerDroplets -= cardData.cost;
+            Debug.Log("I'm rich wohooo");
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
