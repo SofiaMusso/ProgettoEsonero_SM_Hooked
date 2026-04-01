@@ -11,7 +11,25 @@ namespace CardManager
 
         public enum TreasureCardAbility
         {
-            miao,
+            Cannon,
+
+            Hook,
+
+            Bait,
+
+            Net,
+
+            BucketOfWater,
+
+            Dig,
+
+            DeadFish,
+
+            SurvivalInstinct,
+
+            Boat,
+
+            Cure,
         }
     }
 

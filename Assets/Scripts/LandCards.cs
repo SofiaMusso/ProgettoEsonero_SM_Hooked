@@ -13,7 +13,26 @@ namespace CardManager
         public List<LandCardAbility> lCardAbility;
         public enum LandCardAbility
         {
-            miao,
+            LightHouse,
+
+            FishingBoat,
+
+            Reef,
+
+            Submarine,
+
+            UnderwaterVulcano,
+
+            Shipwreck,
+
+            SubmergedTreasure,
+
+            Atlantis,
+
+            School,
+
+            Iceberg,
+
         }
     }
 }
