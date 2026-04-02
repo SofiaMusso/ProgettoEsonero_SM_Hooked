@@ -876,6 +876,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.98118126
       objectReference: {fileID: 0}
+    - target: {fileID: 1048229759619507319, guid: 3fff009333d0d7f4ab14e846cc5777d0, type: 3}
+      propertyPath: m_Name
+      value: ButtonDiscardCCard
+      objectReference: {fileID: 0}
     - target: {fileID: 1055465637029224723, guid: 3fff009333d0d7f4ab14e846cc5777d0, type: 3}
       propertyPath: m_Name
       value: HabitatSlot (3)
@@ -891,6 +895,14 @@ PrefabInstance:
     - target: {fileID: 4144850290463709524, guid: 3fff009333d0d7f4ab14e846cc5777d0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5512419139920962542, guid: 3fff009333d0d7f4ab14e846cc5777d0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5512419139920962542, guid: 3fff009333d0d7f4ab14e846cc5777d0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 5635919276791663130, guid: 3fff009333d0d7f4ab14e846cc5777d0, type: 3}
       propertyPath: slotType

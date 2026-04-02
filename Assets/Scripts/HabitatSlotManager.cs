@@ -8,7 +8,11 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
     [Header("Slot Settings")]
     public CreatureCard.CardType slotType;
 
-    private bool cardIsPlaced;
+    private bool creatureCardIsPlaced;
+    private bool landCardIsPlaced;
+
+    private GameObject creatureCard;
+    private GameObject landCard;
 
     public List<GameObject> cardsOnBoard = new List<GameObject>();
     public HandManager handManager;
@@ -46,7 +50,14 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
         CardData cardData = cardDisplay.cardData;
 
-        if (!cardIsPlaced && PlayerData.playerDroplets >= cardData.cost)
+        if (!creatureCardIsPlaced && PlayerData.playerDroplets >= cardData.cost)
+        {
+            PlayerData.playerDroplets -= cardData.cost;
+            Debug.Log(PlayerData.playerDroplets);
+
+            return true;
+        }
+        if (!landCardIsPlaced && PlayerData.playerDroplets >= cardData.cost)
         {
             PlayerData.playerDroplets -= cardData.cost;
             Debug.Log(PlayerData.playerDroplets);
@@ -83,17 +94,33 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
     private void PlaceCard(GameObject card, CardMovement movement)
     {
-        if (!cardIsPlaced)
+        if (!creatureCardIsPlaced || !landCardIsPlaced)
         {
-            cardIsPlaced = true;
-
             handManager.cardsInHand.Remove(card);
             cardsOnBoard.Add(card);
 
             card.transform.SetParent(transform);
 
-            card.transform.localPosition = new Vector3(0, 0.7f, 0);
-            card.transform.localRotation = Quaternion.identity;
+            CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
+
+            if (cardDisplay.cardData is LandCard)
+            {
+                landCardIsPlaced = true;
+                landCard = card;
+                card.transform.localPosition = new Vector3(0, -1.2f, 0);
+                card.transform.localRotation = Quaternion.identity;
+            }
+            else if(cardDisplay.cardData is CreatureCard)
+            {
+                creatureCardIsPlaced = true;
+                creatureCard = card;
+                card.transform.localPosition = new Vector3(0, 1f, 0);
+                card.transform.localRotation = Quaternion.identity;
+            }
+            else if (cardDisplay.cardData is TreasureCard)
+            {
+                DiscardSingleCard(card);
+            }
 
             if (movement != null)
             {
@@ -119,31 +146,41 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
         }
     }
 
-    public void DiscardCard()
+    public void DiscardCreature()
     {
-        if (cardIsPlaced)
+        if (creatureCard != null)
         {
-            GameObject card = cardsOnBoard[0];
-            CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
-            CardData cardData = cardDisplay.cardData;
-
-            if (cardData.cost == 0 || cardData.cost == 1)
-            {
-                PlayerData.playerDroplets = PlayerData.playerDroplets + 1;
-                Debug.Log(PlayerData.playerDroplets);
-            }
-            else
-            {
-                PlayerData.playerDroplets = PlayerData.playerDroplets + (cardData.cost) / 2;
-                Debug.Log(PlayerData.playerDroplets);
-            }
-
-            cardsOnBoard.Remove(card);
-
-            discardDeckManager.AddToDiscard(card);
-
-            cardIsPlaced = false;
+            DiscardSingleCard(creatureCard);
+            creatureCard = null;
+            creatureCardIsPlaced = false;
         }
+    }
+
+    public void DiscardLand()
+    {
+        if (landCard != null)
+        {
+            DiscardSingleCard(landCard);
+            landCard = null;
+            landCardIsPlaced = false;
+        }
+    }
+    private void DiscardSingleCard(GameObject card)
+    {
+        CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
+        CardData cardData = cardDisplay.cardData;
+
+        if (cardData.cost == 0 || cardData.cost == 1)
+        {
+            PlayerData.playerDroplets += 1;
+        }
+        else
+        {
+            PlayerData.playerDroplets += cardData.cost / 2;
+        }
+
+        cardsOnBoard.Remove(card);
+        discardDeckManager.AddToDiscard(card);
     }
 
 }
