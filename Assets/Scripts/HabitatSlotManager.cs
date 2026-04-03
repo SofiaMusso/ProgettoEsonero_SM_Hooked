@@ -7,6 +7,7 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 {
     [Header("Slot Settings")]
     public CreatureCard.CardType slotType;
+    public PlayerSlot playerSlot;
 
     private bool creatureCardIsPlaced;
     private bool landCardIsPlaced;
@@ -18,6 +19,12 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
     public HandManager handManager;
     public DiscardDeckManager discardDeckManager;
 
+    public enum PlayerSlot
+    {
+        player,
+
+        enemy,
+    }
     void Awake()
     {
         if (handManager == null)
@@ -82,7 +89,7 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
         if (cardDisplay == null) return;
 
-        if (CanPlaceOnHabitat(cardDisplay) && CanPayCard(cardDisplay))
+        if (CanPlaceOnHabitat(cardDisplay) && CanPayCard(cardDisplay) && playerSlot == PlayerSlot.player)
         {
             PlaceCard(droppedObject, cardMovement);
         }
@@ -94,45 +101,52 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
     private void PlaceCard(GameObject card, CardMovement movement)
     {
-        if (!creatureCardIsPlaced || !landCardIsPlaced)
+        CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
+
+        if (cardDisplay.cardData is CreatureCard && creatureCardIsPlaced)
         {
-            handManager.cardsInHand.Remove(card);
-            cardsOnBoard.Add(card);
-
-            card.transform.SetParent(transform);
-
-            CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
-
-            if (cardDisplay.cardData is LandCard)
-            {
-                landCardIsPlaced = true;
-                landCard = card;
-                card.transform.localPosition = new Vector3(0, -1.2f, 0);
-                card.transform.localRotation = Quaternion.identity;
-            }
-            else if(cardDisplay.cardData is CreatureCard)
-            {
-                creatureCardIsPlaced = true;
-                creatureCard = card;
-                card.transform.localPosition = new Vector3(0, 1f, 0);
-                card.transform.localRotation = Quaternion.identity;
-            }
-            else if (cardDisplay.cardData is TreasureCard)
-            {
-                DiscardSingleCard(card);
-            }
-
-            if (movement != null)
-            {
-                movement.enabled = false;
-
-                CardMovement.isDragging = false;
-                CardMovement.currentCardInPlay = null;
-            }
+            Debug.Log("Creature slot already occupied");
+            RejectCard(movement);
+            return;
         }
-        else
+
+        if (cardDisplay.cardData is LandCard && landCardIsPlaced)
         {
-            Debug.Log("Slot is occupied");
+            Debug.Log("Land slot already occupied");
+            RejectCard(movement);
+            return;
+        }
+
+        handManager.cardsInHand.Remove(card);
+        cardsOnBoard.Add(card);
+
+        card.transform.SetParent(transform);
+
+        if (cardDisplay.cardData is LandCard)
+        {
+            landCardIsPlaced = true;
+            landCard = card;
+            card.transform.localPosition = new Vector3(0, -1.2f, 0);
+        }
+        else if (cardDisplay.cardData is CreatureCard)
+        {
+            creatureCardIsPlaced = true;
+            creatureCard = card;
+            card.transform.localPosition = new Vector3(0, 1f, 0);
+        }
+        else if (cardDisplay.cardData is TreasureCard)
+        {
+            DiscardSingleCard(card);
+            return;
+        }
+
+        card.transform.localRotation = Quaternion.identity;
+
+        if (movement != null)
+        {
+            movement.enabled = false;
+            CardMovement.isDragging = false;
+            CardMovement.currentCardInPlay = null;
         }
     }
 
@@ -181,6 +195,16 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
         cardsOnBoard.Remove(card);
         discardDeckManager.AddToDiscard(card);
+    }
+
+    public bool HasCreature()
+    {
+        return creatureCard != null;
+    }
+
+    public GameObject GetCreature()
+    {
+        return creatureCard;
     }
 
 }
