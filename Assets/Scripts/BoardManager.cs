@@ -31,49 +31,55 @@ public class BoardManager : MonoBehaviour
 
     IEnumerator ResolveFight(GameObject attacker, GameObject defender)
     {
-        var atkData = attacker.GetComponent<CardDisplay>().cardData as CreatureCard;
-        var defData = defender.GetComponent<CardDisplay>().cardData as CreatureCard;
+        var atkDisplay = attacker.GetComponent<CardDisplay>();
+        var defDisplay = defender.GetComponent<CardDisplay>();
 
-        int atkDamage = atkData.damage;
-        int defDamage = defData.damage;
+        var atkData = atkDisplay.cardData as CreatureCard;
+        var defData = defDisplay.cardData as CreatureCard;
+
+        int atkDamage = atkDisplay.currentDamage;
+        int defDamage = defDisplay.currentDamage;
+
+        int atkHealth = atkDisplay.currentHealth;
+        int defHealth = defDisplay.currentHealth;
 
         // Apply abilities BEFORE damage
         ApplyAbilities(atkData, defData);
 
-        defData.health -= atkDamage;
-        atkData.health -= defDamage;
+        defHealth -= atkDamage;
+        atkHealth -= defDamage;
 
-        UpdateCardUI(attacker);
-        UpdateCardUI(defender);
+        //Sets current Damage and healt to their new value after the attack and the abilities
+        atkDisplay.currentDamage = atkDamage;
+        defDisplay.currentDamage = defDamage;
+
+        atkDisplay.currentHealth = atkHealth;
+        defDisplay.currentHealth = defHealth;
+        //
+
+        Debug.Log(atkData.name + ": " + atkHealth + ", " + atkDamage);
+        Debug.Log(defData.name + ": " + defHealth + ", " + defDamage);
 
         yield return new WaitForSeconds(0.5f);
 
-        if (defData.health <= 0)
+        if (defHealth <= 0)
+        {
             Destroy(defender);
 
-        if (atkData.health <= 0)
+        }
+
+        if (atkHealth <= 0)
+        {
             Destroy(attacker);
+        }
+
+        UpdateCardUI(attacker);
+        UpdateCardUI(defender);
     }
 
     void ApplyAbilities(CreatureCard attacker, CreatureCard defender)
     {
-        foreach (var ability in attacker.abilityType)
-        {
-            switch (ability)
-            {
-                case CreatureCard.AbilityType.DoubleImpact:
-                    attacker.damage *= 2;
-                    break;
-
-                case CreatureCard.AbilityType.Aggressive:
-                    defender.health -= 1;
-                    break;
-
-                case CreatureCard.AbilityType.Vengeful:
-                    attacker.damage += 2;
-                    break;
-            }
-        }
+        Debug.Log("Abilità");
     }
 
     void UpdateCardUI(GameObject card)
@@ -84,9 +90,12 @@ public class BoardManager : MonoBehaviour
 
     IEnumerator DirectAttack(GameObject attacker)
     {
-        var data = attacker.GetComponent<CardDisplay>().cardData as CreatureCard;
+        var data = attacker.GetComponent<CardDisplay>();
 
-        PlayerData.playerDmgPoints += data.damage;
+        int atkDamage = data.currentDamage;
+
+        PlayerData.playerDmgPoints += atkDamage;
+        Debug.Log("Player Damage: " + PlayerData.playerDmgPoints);
 
         yield return new WaitForSeconds(0.3f);
     }

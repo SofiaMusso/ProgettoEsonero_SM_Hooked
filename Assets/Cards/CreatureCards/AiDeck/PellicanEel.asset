@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PellicanEel
   m_EditorClassIdentifier: 
   cardName: Pellican Eel
-  cardType: 03000000
   cost: 5
+  sprite: {fileID: 0}
+  cardType: 03000000
   damage: 4
   health: 7
   abilityType: 07000000

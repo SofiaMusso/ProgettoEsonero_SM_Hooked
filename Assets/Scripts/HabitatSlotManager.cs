@@ -164,9 +164,20 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
     {
         if (creatureCard != null)
         {
-            DiscardSingleCard(creatureCard);
-            creatureCard = null;
-            creatureCardIsPlaced = false;
+            CreatureCard cardData = creatureCard.GetComponent<CreatureCard>();
+
+            if (cardData.abilityType.Contains(CreatureCard.AbilityType.Immortal))
+            {
+                // non disturgge la carta
+                PlayerData.playerDroplets += cardData.cost;
+                return;
+            }
+            else
+            {
+                DiscardSingleCard(creatureCard);
+                creatureCard = null;
+                creatureCardIsPlaced = false;
+            }
         }
     }
 

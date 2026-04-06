@@ -18,8 +18,19 @@ public class CardDisplay : MonoBehaviour
     public TMP_Text healthText;
     public TMP_Text damageText;
 
+    public int currentHealth;
+    public int currentDamage;
+
     void Start()
-    {
+    {   
+        if (cardData is CreatureCard creature)
+        {
+            currentHealth = creature.health;
+            currentDamage = creature.damage;
+
+            Debug.Log(cardData.name + ": " + currentHealth + ", " + currentDamage);
+        }
+
         UpdateCreatureCardDisplay();
     }
 
@@ -49,8 +60,10 @@ public class CardDisplay : MonoBehaviour
         if (cardData is CreatureCard creature)
         {
         
-            healthText.text = creature.health.ToString();
-            damageText.text = creature.damage.ToString();
+            healthText.text = currentHealth.ToString();
+            damageText.text = currentDamage.ToString();
+
+            Debug.Log("Update UI of " + cardData.name + ": " + currentHealth + ", " + currentDamage);
 
             for (int i = 0; i < landTypeImages.Length; i++)
             {
