@@ -164,7 +164,8 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
     {
         if (creatureCard != null)
         {
-            CreatureCard cardData = creatureCard.GetComponent<CreatureCard>();
+            CardDisplay display = creatureCard.GetComponent<CardDisplay>();
+            CreatureCard cardData = display.cardData as CreatureCard;
 
             if (cardData.abilityType.Contains(CreatureCard.AbilityType.Immortal))
             {
@@ -206,6 +207,8 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
         cardsOnBoard.Remove(card);
         discardDeckManager.AddToDiscard(card);
+
+        Debug.Log(PlayerData.playerDroplets);
     }
 
     public bool HasCreature()

@@ -12,6 +12,7 @@ public class TurnManager : MonoBehaviour
     public DeckManager deckManager;
     public HandManager handManager;
     public BoardManager boardManager;
+    public PlayerData playerData;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartTurn()
     {
+        PlayerData.playerDroplets = + 1;
         currentPhase = TurnPhase.Draw;
         DrawPhase();
     }
