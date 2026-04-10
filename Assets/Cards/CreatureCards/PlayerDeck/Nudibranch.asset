@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Nudibranch
   m_EditorClassIdentifier: 
   cardName: Nudibranch
-  cardType: 02000000
   cost: 1
+  sprite: {fileID: -6993858109580391737, guid: e1c261daf5b048b4e988a8988aa9b5dd, type: 3}
+  cardType: 02000000
   damage: 1
   health: 3
+  land: R
   abilityType: 03000000
+  abilitySprite: {fileID: -2175802193729752757, guid: c0fa2f4ee160bfb4580bd4594116b54a, type: 3}

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Murena
   cost: 3
-  sprite: {fileID: 0}
+  sprite: {fileID: 3170005082361755982, guid: 1a2647d84d3d6c544b2f04559133567c, type: 3}
   cardType: 0100000002000000
   damage: 5
   health: 6
+  land: B
   abilityType: 05000000
+  abilitySprite: {fileID: 4526307777658090538, guid: b1c98a8d4e5654c4b82e97745464f62d, type: 3}

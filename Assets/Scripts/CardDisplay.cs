@@ -9,9 +9,13 @@ public class CardDisplay : MonoBehaviour
 
     [Header ("Creature Card Data")]
     public Image cardImage;
-    //public Image cardSprite;
-    public Image[] landTypeImages;
     public Image[] abilty;
+    public Image cardSprite;
+
+    public Image abilitySprite;
+
+    public TMP_Text landText;
+    public Image landIcon;
 
     public TMP_Text nameText;
     public TMP_Text costText;
@@ -20,6 +24,14 @@ public class CardDisplay : MonoBehaviour
 
     public int currentHealth;
     public int currentDamage;
+
+    private Color[] typeColors =
+    {
+        new Color(0.42f, 0.8f, 1f), //Ocean
+        new Color(1f, 0.96f, 0.61f), //Beach
+        new Color(0.47f, 1f, 0.75f), //Reef
+        new Color(0.48f, 0.44f, 0.7f), //Abyss
+    };
 
     void Start()
     {   
@@ -30,63 +42,56 @@ public class CardDisplay : MonoBehaviour
 
             Debug.Log(cardData.name + ": " + currentHealth + ", " + currentDamage);
         }
+        else
+        {
+            abilitySprite = null;
+        }
 
-        UpdateCreatureCardDisplay();
+            UpdateCreatureCardDisplay();
     }
 
-    void ResetUI()
-    {
-        //healthText.gameObject.SetActive(false);
-        //damageText.gameObject.SetActive(false);
-
-        foreach (var img in landTypeImages)
-        {
-            img.gameObject.SetActive(false);
-        }
-        foreach (var img in abilty)
-        {
-            img.gameObject.SetActive(false);
-        }
-    }
 
     public void UpdateCreatureCardDisplay()
     {
-        ResetUI();
-
         nameText.text = cardData.cardName;
         costText.text = cardData.cost.ToString();
-        //cardSprite.sprite = cardData.sprite;
+
+        if (cardSprite != null && cardData.sprite != null)
+        {
+            cardSprite.sprite = cardData.sprite;
+        }
+
 
         if (cardData is CreatureCard creature)
         {
-        
+            if (abilitySprite != null && creature.abilitySprite != null)
+            {
+                abilitySprite.sprite = creature.abilitySprite;
+                abilitySprite.color = typeColors[(int)creature.cardType[0]];
+                Debug.Log("Ability set");
+            }
+
+            landText.text = creature.land;
+            landIcon.color = typeColors[(int)creature.cardType[0]];
+
+            cardImage.color = typeColors[(int)creature.cardType[0]];
+
             healthText.text = currentHealth.ToString();
             damageText.text = currentDamage.ToString();
 
             Debug.Log("Update UI of " + cardData.name + ": " + currentHealth + ", " + currentDamage);
-
-            for (int i = 0; i < landTypeImages.Length; i++)
-            {
-                if (i < creature.cardType.Count)
-                {
-                    landTypeImages[i].gameObject.SetActive(true);
-                }
-                else
-                {
-                    landTypeImages[i].gameObject.SetActive(false);
-                }
-            }
         }
 
         if (cardData is LandCard land)
         {
+            cardImage.color = new Color(1f, 1f, 1f);
             healthText.text = land.health.ToString();
             damageText.text = land.damage.ToString();
         }
 
         if (cardData is TreasureCard treasure)
         {
-
+            cardImage.color = new Color( 1f, 1f, 1f);
         }
 
     }

@@ -37,6 +37,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     public static bool isInPlay;
     public static bool isDragging = false;
 
+    public HandManager.HandType handType;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -50,7 +52,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     }
     void Update()
-    {
+    {        
         switch (currentState)
         {
             case 1:
@@ -66,14 +68,13 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
                 }
 
                 break;
-
+            
             case 3:
                 HandlePlayState();
-
+                
                 if (!Mouse.current.leftButton.isPressed) // Check if mouse button is released
                 {
                     TransitionToStateZero();
-
                 }
 
                 break;
@@ -97,26 +98,31 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (handType == HandManager.HandType.EnemyHand) return;
+
         if (currentState == 0)
         {
             originalPosition = rectTransform.localPosition;
             originalRotation = rectTransform.localRotation;
-            originalScale = rectTransform.localScale; 
+            originalScale = rectTransform.localScale;
 
             currentState = 1;
         }
+       
     }
 
     public void OnPointerExit(PointerEventData eventData)
-    {
+    { 
         if (currentState == 1)
         {
             TransitionToStateZero();
-        }
+        }        
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (handType == HandManager.HandType.EnemyHand) return;
+
         if (currentState == 1)
         {
             currentState = 2;
@@ -126,10 +132,13 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out originalLocalPointerPosition);
             originalPanelLocalPosition = rectTransform.localPosition;
         }
+    
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (handType == HandManager.HandType.EnemyHand) return;
+
         canvasGroup.blocksRaycasts = false;
 
         if (currentState == 2)
@@ -142,8 +151,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
                 if (rectTransform.localPosition.y > cardPlayY.y)
                 {
-                    currentState = 3;
-                   // rectTransform.localPosition = playPosition;
+                    currentState = 3;     
                 }
             }
         }

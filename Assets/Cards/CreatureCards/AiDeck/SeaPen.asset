@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: SeaPen
   m_EditorClassIdentifier: 
   cardName: Sea Pen
-  cardType: 03000000
   cost: 1
+  sprite: {fileID: -5191215766974162345, guid: 29bee8379558d35468e92200ee7ee9e3, type: 3}
+  cardType: 03000000
   damage: 0
   health: 3
+  land: A
   abilityType: 03000000
+  abilitySprite: {fileID: -2175802193729752757, guid: c0fa2f4ee160bfb4580bd4594116b54a, type: 3}

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Krill
   m_EditorClassIdentifier: 
   cardName: 'Krill '
-  cardType: 03000000000000000100000002000000
   cost: 0
+  sprite: {fileID: -4183398806106070028, guid: 52c28e8f1867e0142bbbd0b766171c08, type: 3}
+  cardType: 00000000030000000100000002000000
   damage: 0
   health: 2
+  land: A
   abilityType: 0a000000
+  abilitySprite: {fileID: -7108333041492557563, guid: 4214ebc4bbdb2e04a9deb417f40106ec, type: 3}

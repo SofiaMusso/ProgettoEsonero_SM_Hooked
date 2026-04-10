@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Vampire Squid
   cost: 3
-  sprite: {fileID: 0}
+  sprite: {fileID: -1687085061549851555, guid: 776670c9f0895b443a80aa6cb13969b9, type: 3}
   cardType: 03000000
   damage: 1
   health: 6
-  abilityType: 02000000
+  land: A
+  abilityType: 01000000
+  abilitySprite: {fileID: 4134397197868709166, guid: ba0cacedb7f5aea45b87898bf2cc864c, type: 3}

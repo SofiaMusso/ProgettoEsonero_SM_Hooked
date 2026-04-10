@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Mackerel
   m_EditorClassIdentifier: 
   cardName: Mackerel
-  cardType: 01000000
   cost: 1
+  sprite: {fileID: 8730880702008328900, guid: 9dcf5203d2c9e5e4aba154cbe9580d9a, type: 3}
+  cardType: 01000000
   damage: 1
   health: 2
+  land: B
   abilityType: 04000000
+  abilitySprite: {fileID: -714655812665524580, guid: 607bfbbec770f4c4a9e33d25dde745ee, type: 3}

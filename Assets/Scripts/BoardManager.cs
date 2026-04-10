@@ -8,28 +8,78 @@ public class BoardManager : MonoBehaviour
     public List<HabitatSlotManager> playerSlots;
     public List<HabitatSlotManager> enemySlots;
 
-    public IEnumerator ResolveCombat()
-    {
-        for (int i = 0; i < playerSlots.Count; i++)
-        {
-            var playerSlot = playerSlots[i];
-            var enemySlot = enemySlots[i];
+    public AudioSource hitSfx;
 
-            if (playerSlot.HasCreature() && enemySlot.HasCreature())
+    public IEnumerator ResolveCombat(List<HabitatSlotManager> attackerSlots, List<HabitatSlotManager> defenderSlots)
+    {
+        List<GameObject> attackerCards = new List<GameObject>();
+
+        for (int i = 0; i < attackerSlots.Count; i++)
+        {
+            GameObject card = attackerSlots[i].GetCreature();
+
+            if (card != null)
             {
-                yield return ResolveFight(
-                    playerSlot.GetCreature(),
-                    enemySlot.GetCreature()
-                );
-            }
-            else if (playerSlot.HasCreature())
-            {
-                yield return DirectAttack(playerSlot.GetCreature());
+                attackerCards.Add(card);
             }
         }
+
+        AbilitySystem.Instance.ApplyPassive(attackerCards);
+
+        for (int i = 0; i < attackerSlots.Count; i++)
+        {
+            var attackerSlot = attackerSlots[i];
+            var defenderSlot = defenderSlots[i];
+
+            GameObject attacker = attackerSlot.GetCreature();
+
+            if (attacker == null)
+                continue;
+
+            CardDisplay cardDisplay = attacker.GetComponent<CardDisplay>();
+
+            if (cardDisplay == null)
+                continue;
+
+            CreatureCard creature = cardDisplay.cardData as CreatureCard;
+
+            if (creature == null)
+                continue;
+
+
+            if (attackerSlot.HasCreature() && defenderSlot.HasCreature())
+            {
+                AbilitySystem.Instance.OnAttack(attacker, enemySlots, i);
+
+                if (creature.abilityType.Contains(CreatureCard.AbilityType.DoubleImpact) || creature.abilityType.Contains(CreatureCard.AbilityType.Jump))
+                {
+                    continue;
+                }
+                else
+                {
+                    yield return StartCoroutine(AttackAnimation(attacker, defenderSlot.GetCreature()));
+                    yield return ResolveFight(attacker, defenderSlot.GetCreature(), attackerSlot, defenderSlot);
+                }
+            }
+            else if (attackerSlot.HasCreature())
+            {
+                if (creature.abilityType.Contains(CreatureCard.AbilityType.DoubleImpact))
+                {
+                    yield return StartCoroutine(AttackAnimation(attacker, defenderSlot.GetCreature()));
+                    AbilitySystem.Instance.OnAttack(attacker, enemySlots, i);
+                }
+                else
+                {
+                    yield return StartCoroutine(AttackAnimation(attacker, defenderSlot.GetCreature()));
+                    yield return DirectAttack(attacker);
+                }
+            }
+        }
+
+
     }
 
-    IEnumerator ResolveFight(GameObject attacker, GameObject defender)
+    IEnumerator ResolveFight(GameObject attacker, GameObject defender, HabitatSlotManager atkSlot, HabitatSlotManager defSlot)
     {
         var atkDisplay = attacker.GetComponent<CardDisplay>();
         var defDisplay = defender.GetComponent<CardDisplay>();
@@ -43,19 +93,19 @@ public class BoardManager : MonoBehaviour
         int atkHealth = atkDisplay.currentHealth;
         int defHealth = defDisplay.currentHealth;
 
-        // Apply abilities BEFORE damage
-        ApplyAbilities(atkData, defData);
 
-        defHealth -= atkDamage;
-        atkHealth -= defDamage;
+        if (defData != null && AbilitySystem.Instance.CanBeAttacked(defData))
+        {
+            defHealth -= atkDamage;
+        }
 
-        //Sets current Damage and healt to their new value after the attack and the abilities
         atkDisplay.currentDamage = atkDamage;
         defDisplay.currentDamage = defDamage;
 
         atkDisplay.currentHealth = atkHealth;
         defDisplay.currentHealth = defHealth;
-        //
+
+        AbilitySystem.Instance.OnHit(attacker, defender);
 
         Debug.Log(atkData.name + ": " + atkHealth + ", " + atkDamage);
         Debug.Log(defData.name + ": " + defHealth + ", " + defDamage);
@@ -64,23 +114,23 @@ public class BoardManager : MonoBehaviour
 
         if (defHealth <= 0)
         {
+            AbilitySystem.Instance.OnDeath(defender, TurnManager.Instance.playerCardIsAttacker);
             Destroy(defender);
-
+            defSlot.creatureCardIsPlaced = false;
         }
 
         if (atkHealth <= 0)
         {
+            AbilitySystem.Instance.OnDeath(attacker, TurnManager.Instance.playerCardIsAttacker);
             Destroy(attacker);
+            atkSlot.creatureCardIsPlaced = false;
         }
 
         UpdateCardUI(attacker);
         UpdateCardUI(defender);
     }
 
-    void ApplyAbilities(CreatureCard attacker, CreatureCard defender)
-    {
-        Debug.Log("Abilità");
-    }
+
 
     void UpdateCardUI(GameObject card)
     {
@@ -94,9 +144,75 @@ public class BoardManager : MonoBehaviour
 
         int atkDamage = data.currentDamage;
 
-        PlayerData.playerDmgPoints += atkDamage;
-        Debug.Log("Player Damage: " + PlayerData.playerDmgPoints);
+        if (TurnManager.Instance.playerCardIsAttacker)
+        {
+            PlayerData.playerDmgPoints += atkDamage;
+            Debug.Log("Player Damage: " + PlayerData.playerDmgPoints);
+        }
+        else
+        {
+            PlayerData.enemyDmgPoints += atkDamage;
+            Debug.Log("Enemy Damage: " + PlayerData.playerDmgPoints);
+        }
 
-        yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.3f);
     }
+
+    IEnumerator AttackAnimation(GameObject attacker, GameObject defender, float duration = 0.2f, float offset = 1f)
+    {
+        Vector3 originalPos = attacker.transform.position;
+        Vector3 targetPos;
+
+        attacker.transform.SetAsLastSibling();
+
+        if (defender == null)
+        {
+            if (TurnManager.Instance.currentTurn == TurnManager.TurnOwner.Player)
+            {
+                targetPos = (attacker.transform.position + (Vector3.up * 200f)) - (Vector3.left * offset);
+                hitSfx.Play();
+            }
+            else
+            {
+                targetPos = (attacker.transform.position + (Vector3.down * 200f)) - (Vector3.left * offset);
+                hitSfx.Play();
+            }
+        }
+        else
+        {
+            targetPos = defender.transform.position + (Vector3.left * offset); // piccola distanza prima dell'impatto
+            hitSfx.Play();
+        }
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            attacker.transform.position = Vector3.Lerp(originalPos, targetPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        attacker.transform.position = targetPos;
+
+        // Qui puoi attivare un effetto visivo
+        //SpawnHitEffect(defender.transform.position);
+
+        // Ritorno alla posizione originale
+        elapsed = 0f;
+        while (elapsed < duration)
+        {
+            attacker.transform.position = Vector3.Lerp(targetPos, originalPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        attacker.transform.position = originalPos;
+    }
+
+    /*void SpawnHitEffect(Vector3 position)
+    {
+        GameObject effect = Instantiate(hitEffectPrefab, position, Quaternion.identity);
+        Destroy(effect, 0.5f); // autodistruzione dopo 0.5s
+    }*/
 }

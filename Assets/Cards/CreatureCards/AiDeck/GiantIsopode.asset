@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: GiantIsopode
   m_EditorClassIdentifier: 
   cardName: Giant Isopode
-  cardType: 03000000
   cost: 3
+  sprite: {fileID: -8437494695660950639, guid: 15a890eede7c57d4e9db64dce5e7d1e3, type: 3}
+  cardType: 03000000
   damage: 1
   health: 9
+  land: A
   abilityType: 00000000
+  abilitySprite: {fileID: 2661678937527391517, guid: 56a5fb2b05f247f4ea3423867e2da07a, type: 3}

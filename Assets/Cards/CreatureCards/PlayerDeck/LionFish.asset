@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: LionFish
   m_EditorClassIdentifier: 
   cardName: Lion fish
-  cardType: 02000000
   cost: 5
+  sprite: {fileID: -6730320637373223454, guid: bcac0fe704d879b419cfd3cd1af6333e, type: 3}
+  cardType: 02000000
   damage: 6
   health: 3
+  land: R
   abilityType: 05000000
+  abilitySprite: {fileID: 4526307777658090538, guid: b1c98a8d4e5654c4b82e97745464f62d, type: 3}

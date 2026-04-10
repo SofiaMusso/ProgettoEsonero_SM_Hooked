@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Dolphin
   m_EditorClassIdentifier: 
   cardName: Dolphin
-  cardType: 0000000001000000
   cost: 4
+  sprite: {fileID: 1624513127720242999, guid: 440e2ec6fa663fd4ba7b868baf664e4d, type: 3}
+  cardType: 0000000001000000
   damage: 2
   health: 6
+  land: B
   abilityType: 06000000
+  abilitySprite: {fileID: 7034338576483803127, guid: b24a767e8da764841a2d6dc993658bf7, type: 3}

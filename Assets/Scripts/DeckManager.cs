@@ -9,29 +9,27 @@ using UnityEngine;
 public class DeckManager : MonoBehaviour
 {
     public List<CardData> playerCards = new List<CardData>();
-    public List<CardData> deckCards = new List<CardData>();
 
     private int currentIndex = 0;
 
     public int maxHandSize;
     public int currentHandSize;
 
-    private HandManager handManager;
+    public HandManager handManager;
     public CardDatabase database;
 
-    public int deckSize;
+    public AudioSource drawCardSfx;
 
     private void Start()
     {
         playerCards = new List<CardData>(database.allCards);
-
-        handManager = FindAnyObjectByType<HandManager>();
 
         // Mescola tutte le carte
         playerCards = playerCards.OrderBy(card => Random.value).ToList();
 
         for (int i = 0; i < 6; i++)
         {
+            TurnManager.Instance.hasDrawn = false;
             DrawCard(handManager);
         }
     }
@@ -45,15 +43,22 @@ public class DeckManager : MonoBehaviour
     }
     public void DrawCard(HandManager handManager)
     {
-        if (playerCards.Count == 0)
+        if (TurnManager.Instance.hasDrawn == false)
         {
-            return;
-        }
-        if (currentHandSize < maxHandSize)
-        {
-            CardData nextCard = playerCards[currentIndex];
-            handManager.AddCardToHand(nextCard);
-            currentIndex = (currentIndex + 1) % playerCards.Count;
+            TurnManager.Instance.hasDrawn = true;
+
+            drawCardSfx.Play();
+
+            if (playerCards.Count == 0)
+            {
+                return;
+            }
+            if (currentHandSize < maxHandSize)
+            {
+                CardData nextCard = playerCards[currentIndex];
+                handManager.AddCardToHand(nextCard);
+                currentIndex = (currentIndex + 1) % playerCards.Count;
+            }
         }
     }
 

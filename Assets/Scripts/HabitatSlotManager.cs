@@ -9,8 +9,8 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
     public CreatureCard.CardType slotType;
     public PlayerSlot playerSlot;
 
-    private bool creatureCardIsPlaced;
-    private bool landCardIsPlaced;
+    public bool creatureCardIsPlaced;
+    public bool landCardIsPlaced;
 
     private GameObject creatureCard;
     private GameObject landCard;
@@ -18,6 +18,9 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
     public List<GameObject> cardsOnBoard = new List<GameObject>();
     public HandManager handManager;
     public DiscardDeckManager discardDeckManager;
+
+    public AudioSource placeDownCardSfx;
+    public AudioSource discardCardSfx;
 
     public enum PlayerSlot
     {
@@ -48,6 +51,7 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
         }
         else
         {
+            Debug.Log("Invalid land type");
             return false;
         }
     }
@@ -73,6 +77,7 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
         }
         else
         {
+            Debug.Log("Not enough Droplets");
             return false;
         }
     }
@@ -80,6 +85,10 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
+        if(TurnManager.Instance.currentTurn != TurnManager.TurnOwner.Player)
+{
+            return;
+        }
         GameObject droppedObject = eventData.pointerDrag;
 
         if (droppedObject == null) return;
@@ -122,6 +131,8 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
 
         card.transform.SetParent(transform);
 
+        placeDownCardSfx.Play();
+
         if (cardDisplay.cardData is LandCard)
         {
             landCardIsPlaced = true;
@@ -150,10 +161,21 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
         }
     }
 
+    public void PlaceCardAI(GameObject card)
+    {
+        CardDisplay cardDisplay = card.GetComponent<CardDisplay>();
+
+        if (cardDisplay.cardData is CreatureCard && !HasCreature())
+        {
+            card.transform.SetParent(transform);
+            card.transform.localPosition = new Vector3(0, 1f, 0);
+            card.transform.localRotation = Quaternion.Euler(0f, 0f, 180f);
+            creatureCard = card;
+        }
+    }
+
     private void RejectCard(CardMovement movement)
     {
-        Debug.Log("Invalid land type or not enough Droplets");
-
         if (movement != null)
         {
             movement.SendMessage("TransitionToStateZero");
@@ -206,6 +228,7 @@ public class HabitatSlotManager : MonoBehaviour, IDropHandler
         }
 
         cardsOnBoard.Remove(card);
+        discardCardSfx.Play();
         discardDeckManager.AddToDiscard(card);
 
         Debug.Log(PlayerData.playerDroplets);

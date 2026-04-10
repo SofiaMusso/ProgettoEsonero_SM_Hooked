@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: ClownFish
   m_EditorClassIdentifier: 
   cardName: Clown fish
-  cardType: 02000000
   cost: 1
+  sprite: {fileID: 6992532784220478945, guid: c2c773f7ebc7a204a9070793f62db050, type: 3}
+  cardType: 02000000
   damage: 1
   health: 2
+  land: R
   abilityType: 04000000
+  abilitySprite: {fileID: -714655812665524580, guid: 607bfbbec770f4c4a9e33d25dde745ee, type: 3}

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: WhaleShark
   m_EditorClassIdentifier: 
   cardName: Whale shark
-  cardType: 02000000
   cost: 3
+  sprite: {fileID: -381578280940518114, guid: 8ad6b81f6e2b1f641a109dd84c34aa8f, type: 3}
+  cardType: 02000000
   damage: 1
   health: 10
+  land: R
   abilityType: 0a000000
+  abilitySprite: {fileID: -7108333041492557563, guid: 4214ebc4bbdb2e04a9deb417f40106ec, type: 3}

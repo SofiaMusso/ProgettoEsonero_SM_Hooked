@@ -20,6 +20,15 @@ public class HandManager : MonoBehaviour
     private bool MovedHand = false;
 
     public List<GameObject> cardsInHand = new List<GameObject>();
+   
+    public HandType handType;
+
+    public enum HandType
+    {
+        PlayerHand,
+
+        EnemyHand
+    }
 
     private void Update()
     {
@@ -39,10 +48,14 @@ public class HandManager : MonoBehaviour
         {
             //Instantiate the cards and adds it in the list
             GameObject newCard = Instantiate(cardPrefab, handTransform.position, Quaternion.identity, handTransform);
+
+            newCard.GetComponent<CardMovement>().handType = handType;
+
             cardsInHand.Add(newCard);
 
             //set card data
             newCard.GetComponent<CardDisplay>().cardData = cardData;
+
         }
 
         UpdateHandVisuals();
@@ -76,17 +89,20 @@ public class HandManager : MonoBehaviour
 
     public void MoveHandDown()
     {
-        foreach (var card in cardsInHand)
+        if (handType == HandType.PlayerHand)
         {
-            if (card == CardMovement.currentCardInPlay.gameObject)
+            foreach (var card in cardsInHand)
             {
-                continue;
+                if (card == CardMovement.currentCardInPlay.gameObject)
+                {
+                    continue;
+                }
+                card.transform.position = new Vector3(card.transform.position.x, moveCardDown, card.transform.position.z);
+                card.transform.rotation = Quaternion.identity;
             }
-            card.transform.position = new Vector3(card.transform.position.x, moveCardDown, card.transform.position.z);
-            card.transform.rotation = Quaternion.identity;
-        }
 
-        MovedHand = true;
+            MovedHand = true;
+        }
     }
 
     public void MoveHandUp()

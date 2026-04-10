@@ -7,10 +7,11 @@ using UnityEngine;
 public class DiscardDeckManager : MonoBehaviour
 {
     public static List<GameObject> discardedCards = new List<GameObject>();
-
+    public List<GameObject> cards = new List<GameObject>();
     public void AddToDiscard(GameObject card)
     {
         discardedCards.Add(card);
+        cards.Add(card);
 
         // Hide the card from view
         CanvasGroup cg = card.GetComponent<CanvasGroup>();

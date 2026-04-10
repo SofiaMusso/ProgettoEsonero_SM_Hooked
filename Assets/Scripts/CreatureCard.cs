@@ -13,7 +13,12 @@ namespace CardManager
         public int damage;
         public int health;
 
+        public string land;
+
         public List<AbilityType> abilityType;
+
+        public Sprite abilitySprite;
+
         public enum CardType
         {
             Ocean,

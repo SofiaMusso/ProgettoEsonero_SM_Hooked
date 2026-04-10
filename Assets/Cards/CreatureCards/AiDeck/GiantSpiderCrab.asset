@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: GiantSpiderCrab
   m_EditorClassIdentifier: 
   cardName: Giant Spider Crab
-  cardType: 03000000
   cost: 4
+  sprite: {fileID: -5075254677651287669, guid: a453403ffd593384ca9da1232147b25c, type: 3}
+  cardType: 03000000
   damage: 5
   health: 4
+  land: A
   abilityType: 05000000
+  abilitySprite: {fileID: 4526307777658090538, guid: b1c98a8d4e5654c4b82e97745464f62d, type: 3}

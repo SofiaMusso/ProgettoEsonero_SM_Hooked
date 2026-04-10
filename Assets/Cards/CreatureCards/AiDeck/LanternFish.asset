@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: LanternFish
   m_EditorClassIdentifier: 
   cardName: Lantern fish
-  cardType: 03000000
   cost: 6
+  sprite: {fileID: 500427331067334921, guid: 287a5c2310cf8974999f38906cfad1a9, type: 3}
+  cardType: 03000000
   damage: 3
   health: 8
-  abilityType: 0500000007000000
+  land: A
+  abilityType: 05000000
+  abilitySprite: {fileID: 4526307777658090538, guid: b1c98a8d4e5654c4b82e97745464f62d, type: 3}
